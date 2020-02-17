@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="Client.ConnectControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client"
+             xmlns:common="clr-namespace:Common;assembly=Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="Welcome to Hallo" FontSize="20" />
+            <TextBlock Text="Sign in:" FontSize="10" />
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <StackPanel.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="Width" Value="100"></Setter>
+                </Style>
+            </StackPanel.Resources>
+            <Label Content="Server IP Address" />
+            <TextBox Text="{Binding IpAddress}" HorizontalAlignment="Center" />
+            <Label Content="Port" />
+            <TextBox Text="{Binding Port}" />
+            <Label Content="Name" />
+            <TextBox Text="{Binding Name}" />
+            <Label Content="Choose a profile picture:" />
+            <Border BorderBrush="Black" BorderThickness="1" Height="50" Width="50" CornerRadius="90" Visibility="{Binding ImageVisibility}" Background="White" ClipToBounds="True">
+                <Border.Clip>
+                    <RectangleGeometry RadiusX="50" RadiusY="50" Rect="0,0,50,50" />
+                </Border.Clip>
+                <ContentControl Content="{Binding ImageData}" IsTabStop="False">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}, Path=DataContext.ImageType}" Value="{x:Static common:ImageType.Png}">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Path=., Converter={StaticResource PngStreamConverter}}" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Path=Height}" />
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}, Path=DataContext.ImageType}" Value="{x:Static common:ImageType.Jpeg}">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Path=., Converter={StaticResource JpegStreamConverter}}" Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Border}, Path=Height}" />
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </Border>
+            <Button Content="Find" HorizontalAlignment="Center" FontSize="10" Width="50" Command="{Binding UpdateImageCommand}" />
+        </StackPanel>
+        <Button Margin="4" Command="{Binding ConnectCommand}" Width="Auto" Grid.Row="2" Content="Connect" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>
